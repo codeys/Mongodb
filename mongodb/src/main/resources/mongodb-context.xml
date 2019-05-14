@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/data/mongo   
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+
+	<!-- 加载mongodb配置文件 -->
+	<context:property-placeholder location="classpath:mongodb.properties"/>
+	<!-- <context:property-placeholder location="classpath:db.properties"/> -->
+	<!-- 定义mongo3.0以下对象，对应的是mongodb官方jar包中的Mongo，replica-set设置集群副本的ip地址和端口 -->
+	<!-- <mongo:mongo id="mongo" replica-set="${mongo.hostport}">
+          
+    </mongo:mongo>
+    <mongo:db-factory dbname="database" mongo-ref="mongo" />
+    
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongo" />
+        <constructor-arg name="databaseName" value="test" />
+    </bean> -->
+    <!-- spring连接mongodb数据库的配置 -->
+    <mongo:mongo-client host="${mongo.host}" port="${mongo.port}"  id="mongo">  
+       <mongo:client-options write-concern="SAFE"/>  
+    </mongo:mongo-client> 
+ 
+    <mongo:db-factory  id="mongoDbFactory" dbname="${mongo.dbname}" mongo-ref="mongo" />  
+ 
+    <!-- 只要使用这个调用相应的方法操作 -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">  
+       <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />  
+    </bean>   
+
+</beans>
